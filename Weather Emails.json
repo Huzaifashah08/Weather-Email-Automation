@@ -1,0 +1,172 @@
+{
+  "name": "Weather Emails",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "02b8e2fd-fe24-48ba-8144-6ba6358027c3",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "cityName": "Islamabad"
+      },
+      "type": "n8n-nodes-base.openWeatherMap",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "ff6f246a-35ce-4c95-8aa9-9beef207fc4c",
+      "name": "OpenWeatherMap",
+      "credentials": {
+        "openWeatherMapApi": {
+          "id": "eFaLcgqb7MlepjEY",
+          "name": "OpenWeatherMap account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cd7cd8ec-a022-4045-8eef-9f132ff9c50a",
+              "leftValue": "={{ $json.main.temp }}",
+              "rightValue": 15,
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "fc289f16-6bf7-428e-bd3a-712d7344929a",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "tehebi3961@datehype.com",
+        "subject": "Weather",
+        "message": "=<!-- Cold Weather Email - paste as raw HTML into your email builder -->\n<!doctype html>\n<html>\n<head>\n  <meta charset=\"utf-8\" />\n  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\" />\n  <title>Cold Weather Alert</title>\n  <style>\n    /* minimal inline-friendly CSS. Many clients ignore <style>, so key styles are repeated inline below */\n    body { margin:0; padding:0; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }\n    img { border:0; line-height:100%; outline:none; text-decoration:none; display:block; }\n    table { border-collapse:collapse; }\n    @media only screen and (max-width:480px) {\n      .container { width:100% !important; }\n      .stack { display:block !important; width:100% !important; }\n      .hero { font-size:20px !important; }\n    }\n  </style>\n</head>\n<body style=\"background-color:#eef6fb; margin:0; padding:20px;\">\n  <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\">\n    <tr>\n      <td align=\"center\">\n        <table class=\"container\" width=\"600\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"width:600px; max-width:600px; background:#ffffff; border-radius:8px; overflow:hidden; box-shadow:0 2px 6px rgba(0,0,0,0.08);\">\n          <!-- Header -->\n          <tr>\n            <td style=\"background:linear-gradient(90deg,#2b8cff,#60a6ff); padding:22px; color:#ffffff; text-align:left;\">\n              <table width=\"100%\" role=\"presentation\">\n                <tr>\n                  <td style=\"font-family:Arial,Helvetica,sans-serif; font-size:18px; font-weight:700;\">❄️ Cold Weather Update</td>\n                  <td align=\"right\" style=\"font-family:Arial,Helvetica,sans-serif; font-size:13px; opacity:0.95;\">\n                    <span style=\"display:inline-block; padding:6px 10px; background:rgba(255,255,255,0.12); border-radius:20px;\">Stay Warm</span>\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n\n          <!-- Hero -->\n          <tr>\n            <td style=\"padding:22px;\">\n              <table width=\"100%\" role=\"presentation\">\n                <tr>\n                  <td style=\"font-family:Arial,Helvetica,sans-serif; font-size:24px; font-weight:700; color:#0b3b66;\" class=\"hero\">\n                    It's currently {{ $('OpenWeatherMap').item.json.main.temp }}° — feels like {{ $('OpenWeatherMap').item.json.main.feels_like }}°\n                  </td>\n                </tr>\n                <tr>\n                  <td style=\"padding-top:10px; font-family:Arial,Helvetica,sans-serif; font-size:15px; color:#3e5978;\">\n                    Bundle up — temperatures are low. Here are quick tips to stay safe and cozy.\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n\n          <!-- Tips -->\n          <tr>\n            <td style=\"padding:0 22px 22px;\">\n              <table width=\"100%\" role=\"presentation\" style=\"font-family:Arial,Helvetica,sans-serif; font-size:14px; color:#27455a;\">\n                <tr>\n                  <td style=\"padding:12px 0; border-top:1px solid #e6f1fb;\">\n                    <strong>✅ Dress warm</strong> — layers, hat, gloves, scarf.\n                  </td>\n                </tr>\n                <tr>\n                  <td style=\"padding:12px 0;\">\n                    <strong>✅ Protect pipes</strong> — let faucets drip if freezing overnight.\n                  </td>\n                </tr>\n                <tr>\n                  <td style=\"padding:12px 0;\">\n                    <strong>✅ Check travel</strong> — roads may be icy; leave extra time.\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n\n          <!-- CTA -->\n          <tr>\n            <td style=\"padding:0 22px 28px;\">\n              <table width=\"100%\" role=\"presentation\">\n                <tr>\n                  <td align=\"center\">\n                    <!-- Bulletproof button -->\n                    <a href=\"#\" style=\"display:inline-block; text-decoration:none; font-family:Arial,Helvetica,sans-serif; font-weight:700; padding:12px 22px; border-radius:6px; background:#1f6fe0; color:#ffffff; border:1px solid #1b62cc;\">\n                      Weather Details\n                    </a>\n                  </td>\n                </tr>\n                <tr>\n                  <td style=\"padding-top:12px; text-align:center; font-family:Arial,Helvetica,sans-serif; color:#7b99b8; font-size:12px;\">\n                    Stay warm — check local advisories if temperatures drop further.\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n\n          <!-- Footer -->\n          <tr>\n            <td style=\"background:#f3f8ff; padding:14px 22px; font-family:Arial,Helvetica,sans-serif; color:#6b86a6; font-size:12px; text-align:center;\">\n              Sent by Your Weather Team • <a href=\"#\" style=\"color:#2b8cff; text-decoration:none;\">Manage preferences</a>\n            </td>\n          </tr>\n        </table>\n      </td>\n    </tr>\n  </table>\n\n  <!-- Optional: Browser-only script for preview/testing.\n       Most email clients strip <script> tags — do not rely on this running in recipients' inboxes.\n       The script below replaces placeholders when you view the HTML in a browser for preview.\n  -->\n  <script>\n    (function(){\n      try {\n        // Only run if running in a browser preview (NOT in email clients).\n        var temp = \"{{ $('OpenWeatherMap').item.json.main.temp }}\";\n        var feels = \"{{ $('OpenWeatherMap').item.json.main.feels_like }}\";\n        // Example: if you want to test locally, replace the placeholders like:\n        if (temp.indexOf(\"$(\") === 0) {\n          temp = \" -2\"; // sample fallback for preview\n        }\n        var nodes = document.body.innerHTML;\nnodes = nodes.replaceAll(\"{{ $('OpenWeatherMap').item.json.main.temp }}\", temp);\nnodes = nodes.replaceAll(\"{{ $('OpenWeatherMap').item.json.main.feels_like }}\", feels);\n        document.body.innerHTML = nodes;\n      } catch(e){\n        console.log(\"preview script error\", e);\n      }\n    })();\n  </script>\n</body>\n</html>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        640,
+        -176
+      ],
+      "id": "524c1511-4c35-4e59-9eb4-c5975f093596",
+      "name": "Send a message",
+      "webhookId": "3cab846f-f0eb-4a17-b78b-f6cacc2c3ee4",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "3ZyUuV3o3RM1vRLR",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "tehebi3961@datehype.com",
+        "subject": "Weather",
+        "message": "=<!doctype html>\n<html>\n<head>\n  <meta charset=\"utf-8\" />\n  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\" />\n  <title>Hot Weather Update</title>\n  <style>\n    body { margin:0; padding:0; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }\n    img { border:0; display:block; }\n    table { border-collapse:collapse; }\n    @media only screen and (max-width:480px) {\n      .container { width:100% !important; }\n      .hero { font-size:20px !important; }\n    }\n  </style>\n</head>\n\n<body style=\"background-color:#fff3e0; margin:0; padding:20px;\">\n  <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">\n    <tr>\n      <td align=\"center\">\n        <table width=\"600\" class=\"container\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#ffffff; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.08);\">\n          \n          <!-- Header -->\n          <tr>\n            <td style=\"background:linear-gradient(90deg,#ff7b00,#ffb347); padding:22px; color:#fff;\">\n              <table width=\"100%\">\n                <tr>\n                  <td style=\"font-family:Arial; font-size:20px; font-weight:700;\">\n                    🔥 Extreme Heat Alert\n                  </td>\n                  <td align=\"right\" style=\"font-family:Arial; font-size:13px;\">\n                    <span style=\"background:rgba(255,255,255,0.2); padding:6px 10px; border-radius:20px;\">Stay Safe</span>\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n\n          <!-- Hero -->\n          <tr>\n            <td style=\"padding:22px;\">\n              <table width=\"100%\">\n                <tr>\n                  <td style=\"font-family:Arial; font-size:26px; font-weight:700; color:#a34a00;\" class=\"hero\">\n                    Current Temp: {{ $('OpenWeatherMap').item.json.main.temp }}°  \n                    <br>\n                    Feels Like: {{ $('OpenWeatherMap').item.json.main.feels_like }}°\n                  </td>\n                </tr>\n                <tr>\n                  <td style=\"padding-top:10px; font-family:Arial; font-size:15px; color:#6b3e00;\">\n                    Intense heat conditions detected. Take precautions when outdoors.\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n\n          <!-- Tips -->\n          <tr>\n            <td style=\"padding:0 22px 22px;\">\n              <table width=\"100%\" style=\"font-family:Arial; font-size:15px; color:#844c00;\">\n                <tr>\n                  <td style=\"padding:12px 0; border-top:1px solid #ffe5c0;\">\n                    <strong>💧 Hydrate constantly</strong> — drink water every 20–30 minutes.\n                  </td>\n                </tr>\n                <tr>\n                  <td style=\"padding:12px 0;\">\n                    <strong>🌤 Avoid direct sunlight</strong> — stay indoors during peak hours.\n                  </td>\n                </tr>\n                <tr>\n                  <td style=\"padding:12px 0;\">\n                    <strong>⚠️ Heat exhaustion danger</strong> — rest if you feel dizzy or light-headed.\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n\n          <!-- CTA -->\n          <tr>\n            <td style=\"padding:0 22px 28px;\">\n              <table width=\"100%\">\n                <tr>\n                  <td align=\"center\">\n                    <a href=\"#\" style=\"text-decoration:none; display:inline-block; background:#ff8c00; color:#fff; padding:14px 24px; border-radius:6px; font-family:Arial; font-weight:700;\">\n                      View Full Heat Index\n                    </a>\n                  </td>\n                </tr>\n                <tr>\n                  <td style=\"padding-top:12px; text-align:center; font-family:Arial; color:#b36b27; font-size:12px;\">\n                    Check local alerts for emergency updates.\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n\n          <!-- Footer -->\n          <tr>\n            <td style=\"background:#fff6e6; padding:14px 22px; font-family:Arial; color:#a3713a; font-size:12px; text-align:center;\">\n              Sent by Your Weather Service • <a href=\"#\" style=\"color:#ff8c00; text-decoration:none;\">Manage preferences</a>\n            </td>\n          </tr>\n\n        </table>\n      </td>\n    </tr>\n  </table>\n\n  <!-- PREVIEW SCRIPT (for browser only — ESPs ignore it) -->\n  <script>\n    (function () {\n      try {\n        var temp  = \"{{ $('OpenWeatherMap').item.json.main.temp }}\";\n        var feels = \"{{ $('OpenWeatherMap').item.json.main.feels_like }}\";\n\n        // Local preview fallback only\n        if (temp.includes(\"$(\")) {\n          temp = \"42\";\n          feels = \"45\";\n        }\n\n        var nodes = document.body.innerHTML;\n\n        nodes = nodes.replaceAll(\"{{ $('OpenWeatherMap').item.json.main.temp }}\", temp);\n        nodes = nodes.replaceAll(\"{{ $('OpenWeatherMap').item.json.main.feels_like }}\", feels);\n\n        document.body.innerHTML = nodes;\n      } catch (e) {\n        console.log(\"Preview error:\", e);\n      }\n    })();\n  </script>\n</body>\n</html>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        624,
+        128
+      ],
+      "id": "aecc1e6e-ab15-48d1-9374-b1af7b93d4dc",
+      "name": "Send a message1",
+      "webhookId": "3cab846f-f0eb-4a17-b78b-f6cacc2c3ee4",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "3ZyUuV3o3RM1vRLR",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "OpenWeatherMap",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenWeatherMap": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6f24b733-906b-42f5-9c82-e475964ee1cf",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5b28dc6da83a96aebb823f1c066119bc6311a1c00c994a3c54898455e6bbbd81"
+  },
+  "id": "xzpaoKAiajUzmpBO",
+  "tags": []
+}
